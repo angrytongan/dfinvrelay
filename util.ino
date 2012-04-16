@@ -9,39 +9,39 @@ util::~util(void) {
 void util::hexdump(unsigned char *buf, unsigned int len, unsigned int dump_width) {
 #ifdef DEBUG
 #ifdef DESKTOP
-	unsigned char *p;
-	unsigned char *q;
-	unsigned char *e = buf + len;
-	unsigned char i;
+    unsigned char *p;
+    unsigned char *q;
+    unsigned char *e = buf + len;
+    unsigned char i;
 
-	struct timeval tp;
+    struct timeval tp;
 
-	if (gettimeofday(&tp, NULL) != -1) {
-		printf("%s", ctime(&tp.tv_sec));
-	}
+    if (gettimeofday(&tp, NULL) != -1) {
+        printf("%s", ctime(&tp.tv_sec));
+    }
 
-	for (p = q = buf; p <= e; ) {
-		if (p == e || (p - q) == (int)dump_width) {
-			for (i = 0; i < dump_width - (p - q); i++) {
-				printf("   ");
-			}
+    for (p = q = buf; p <= e; ) {
+        if (p == e || (p - q) == (int)dump_width) {
+            for (i = 0; i < dump_width - (p - q); i++) {
+                printf("   ");
+            }
 
-			printf(": ");
-			for (; q < p; q++) {
-				printf("%c", (*q >= 0x20 && *q <= 0x7e) ? *q : '.');
-			}
-			printf("\n");
-			q = p;
+            printf(": ");
+            for (; q < p; q++) {
+                printf("%c", (*q >= 0x20 && *q <= 0x7e) ? *q : '.');
+            }
+            printf("\n");
+            q = p;
 
-			if (p == e) {
-				break;
-			}
-		} else {
-			printf("%02x ", *p);
-			p++;
-		}
-	}
-	printf("\n");
+            if (p == e) {
+                break;
+            }
+        } else {
+            printf("%02x ", *p);
+            p++;
+        }
+    }
+    printf("\n");
     fflush(stdout);
 #endif /* DESKTOP */
 #endif /* DEBUG */
@@ -77,7 +77,7 @@ void util::die(const char *str) {
     }
 #endif
 #ifdef DESKTOP
-	exit(1);
+    exit(1);
 #else
     for (;;) {
         util::blink(10, 200, 200);
@@ -162,16 +162,16 @@ unsigned long util::millis(void) {
 
 #ifdef UNITTEST
 int main(void) {
-	unsigned char buf[256];
-	unsigned int i;
+    unsigned char buf[256];
+    unsigned int i;
 
     util::msg("testing %s %d %f\n", "foobar", 1, 12.34);
 
-	for (i = 0; i < 256; i++) {
-		buf[i] = i;
-	}
+    for (i = 0; i < 256; i++) {
+        buf[i] = i;
+    }
 
-	util::hexdump(buf, 256);
+    util::hexdump(buf, 256);
 
     util::msg("%d\n", util::strncmp("foo1", "foo2")); /* 1 */
     util::msg("%d\n", util::strncmp("foo1", "foo2", 2)); /* 0 */
