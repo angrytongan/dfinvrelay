@@ -1,0 +1,91 @@
+----------
+dfinvrelay
+----------
+
+The SMA 3000HF inverter has a Bluetooth interface that can be used to pull out
+various statistics, but my computers are on the other side of the house, too
+far away to talk to the inverter. Rather than move the computers, I built a
+little box using a Seeeduino Stalker (Arduino), Bluetooth Bee and a Wifly to
+talk to the inverter and upload stats directly to pvoutput.
+
+Bill of materials
+-----------------
+- 1 x Seeeduino waterproof kit (I used v2.0, but should work with v2.1)
+  (http://www.seeedstudio.com/depot/seeeduino-stalker-waterproof-solar-kit-p-911.html?cPath=138)
+
+- 1 x Bluetooth Bee
+  (http://www.seeedstudio.com/depot/bluetooth-bee-p-598.html?cPath=139_142)
+
+- 1 x Roving Networks WiFly with wire antenna (PCB antenna should work too):
+  (http://www.seeedstudio.com/depot/seeeduino-stalker-waterproof-solar-kit-p-911.html?cPath=138)
+
+Code
+----
+The SMA protocol is closed, and there are no documents freely available that
+describe the entire protocol. There have been a number of efforts to reverse
+engineer the protocol. I have taken liberal amounts of code from
+Stuart Pittaway's nanodesmapvmonitor project available at:
+
+https://github.com/stuartpittaway/nanodesmapvmonitor
+
+The rest, blame me.
+
+Dependencies
+------------
+- Arduino Time library:
+  http://arduino.cc/playground/Code/Time
+
+- Arduino SoftwareSerial library:
+  http://arduino.cc/hu/Reference/SoftwareSerial
+
+- Narcoleptic sleep library:
+  http://code.google.com/p/narcoleptic/
+
+- TMP102 temperature library from Seeedstudio:
+  http://seeedstudio.com/wiki/Seeeduino_Stalker_v2.0#Source_Code_Examples
+
+Caveats
+-------
+The project only implements a few messages of the SMA protocol, enough to
+get stats up to http://pvoutput.org. Check out Stuart (and other's) efforts
+for more of the protocol.
+
+Arduino 1.0 builds the code to about 18k, which is at least 2x as big as it
+needs to be, but I wrote this in a hurry.
+
+Some leftover cruft from testing on the computer is in the code - this is
+marked with #define DESKTOP.
+
+At one point I was getting some clashes between the hardware and software
+serial libraries on read()s; adding some small delays in the serial read()
+seemed to tidy these up. Should look at the interrupts, but like I said,
+I put this together in a hurry.
+
+The WiFly wakes up independently of the Arduino. You might want to sacrifice
+a pin or two to check RTS on the WiFly to be sure it's there before you tell
+it to upload.
+
+The Bluetooth bee is put to sleep by manipulating pin 5 on the Seeeduino
+Stalker. There is a track you have to cut on the board in order to be able
+to do this; read the Stalker specs for details.
+
+Somewhere in the SMA user documentation (or somewhere else, probably Internet)
+it states you can only have two Bluetooth connections to the SMA inverter
+at once. You can run into problems if you don't disconnect the BT bee after
+making a connection - typically you can't connect again for some sort of
+timeout period. It's a bit frustrating, but give a minute or two between
+your connections and you should be fine.
+
+Other stuff
+-----------
+My solar feed is available at:
+http://pvoutput.org/list.jsp?userid=7398
+
+If you use pvoutput.org, please consider donating (unaffiliated):
+http://pvoutput.org/donate.jsp
+
+More information on SMA products (unaffiliated):
+http://www.sma.de/en
+
+Have fun!
+Dean
