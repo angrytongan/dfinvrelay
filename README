@@ -56,6 +56,8 @@ needs to be, but I wrote this in a hurry.
 Some leftover cruft from testing on the computer is in the code - this is
 marked with #define DESKTOP.
 
+I duplicate the SMA and BTBee addresses between sma.ino and bt.ino.
+
 At one point I was getting some clashes between the hardware and software
 serial libraries on read()s; adding some small delays in the serial read()
 seemed to tidy these up. Should look at the interrupts, but like I said,

@@ -66,7 +66,7 @@ char wait_state(char state) {
             state = 3;
         } else if (!util::strncmp(str, "+BTSTATE:4", 10)) {
             state = 4;
-        } else if (!util::strncmp(str, "+RTINQ=0,80,25,1F,13,8F", 23)) {
+        } else if (!util::strncmp(str, "+RTINQ=0,0,0,0,0,0", 23)) {    /* XXX include this from sma.ino */
             state = 5;
         } else if (!util::strncmp(str, "~", 1)) { /* getting data packets */
             state = 4;
