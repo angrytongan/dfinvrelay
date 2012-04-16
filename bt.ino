@@ -122,7 +122,7 @@ bool pair(void) {
                 return true;
 
             case 5:
-                bt_send("CONN=0,80,25,1F,13,8F");
+                bt_send("CONN=0,0,0,0,0,0");    /* XXX include this from sma.ino */
                 timeout = util::millis() + SECONDS(10);
                 break;
 
