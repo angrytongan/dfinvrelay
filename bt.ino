@@ -46,7 +46,8 @@ void bt_send(const char *str) {
     Serial.write("\r\n");
 }
 
-char wait_state(char state) {
+char wait_state(void) {
+    char state = -1;
     char str[128] = { 0 };
 
     /*
@@ -91,7 +92,7 @@ bool pair(void) {
      * should be in a known state.
      */
     for (timeout = util::millis() + SECONDS(5); util::millis() < timeout; ) {
-        state = wait_state(state);
+        state = wait_state();
     }
 
     if (state == -1) {
@@ -130,7 +131,7 @@ bool pair(void) {
                 break;
         }
 
-        state = wait_state(state);
+        state = wait_state();
     }
 
     /*

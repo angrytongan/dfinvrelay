@@ -16,6 +16,8 @@
 #define WIFLY_BAUD_RATE    19200
 #define BTBEE_BAUD_RATE    9600
 
+#define MAX_RETRIES 3
+
 unsigned long last_total_kwh;
 unsigned long last_spot_ac;
 unsigned long last_now;
@@ -74,12 +76,13 @@ void loop(void) {
     unsigned long spot_ac = 0;
     unsigned long now = 0;
     bool status = false;
+    unsigned char retries = MAX_RETRIES;
 
     /*
-     * Keep trying to talk to the inverter.
+     * Try and talk to the inverter.
      */
-    for (status = false; !status; ) {
-        delay(5000);    /* give BT module a breather */
+    while (!status && retries--) {
+        delay(5000);
 
         btbee_power(HIGH);
         if (bt_init()) {
@@ -97,18 +100,22 @@ void loop(void) {
      * save power, and we'll eventually wake up with some
      * new data.
      */
-    if (total_kwh == last_total_kwh &&
-        spot_ac == last_spot_ac &&
-        now == last_now) {
-        sleep_minutes = 60;
-    } else {
-        last_total_kwh = total_kwh;
-        last_spot_ac = spot_ac;
-        last_now = now;
-        sleep_minutes = 10; /* pvoutput default upload is 10 minutes */
+    if (status) {
+        if (total_kwh == last_total_kwh &&
+            spot_ac == last_spot_ac &&
+            now == last_now) {
+            sleep_minutes = 60;
+        } else {
+            last_total_kwh = total_kwh;
+            last_spot_ac = spot_ac;
+            last_now = now;
+            sleep_minutes = 10; /* pvoutput default upload is 10 minutes */
 
-        wifly_init();
-        wifly_upload_stats(total_kwh, spot_ac, now, tmp102_get());
+            wifly_init();
+            wifly_upload_stats(total_kwh, spot_ac, now, tmp102_get());
+        }
+    } else {
+        sleep_minutes = 10;
     }
 
     /*
