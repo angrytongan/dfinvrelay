@@ -78,7 +78,7 @@ bool wifly_wait(const char *str, unsigned long ms) {
 
 void wifly_cmd_mode(void) {
     wifly_send("$$$");
-    wifly_wait("CMD", 1000);
+    wifly_wait("CMD", 5000);
 }
 
 void wifly_data_mode(void) {
@@ -155,7 +155,7 @@ void wifly_sleep(unsigned char minutes) {
     wifly_send(minutes * 60);
     wifly_send("\r");
 
-    if (wifly_wait("AOK", 2000)) {
+    if (wifly_wait("AOK", 10000)) {
         wifly_send("sleep\r");
     }
 }
