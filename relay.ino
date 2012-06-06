@@ -128,7 +128,7 @@ void loop(void) {
      * buffer is safe enough.
      */
     util::blink(5, 50, 50);
-    wifly_sleep(sleep_minutes - 2);
+    wifly_sleep(sleep_minutes - 1);
     snooze(sleep_minutes);
     util::blink(5, 50, 50);
 }
