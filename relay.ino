@@ -46,7 +46,7 @@ void btbee_power(unsigned char on) {
  * passed in and halve the delay.
  */
 void snooze(int minutes) {
-    for (minutes *= 2; minutes; minutes--) {
+    for (minutes *= 2; minutes > 0; minutes--) {
         Narcoleptic.delay(30 * 1000);
     }
 }
