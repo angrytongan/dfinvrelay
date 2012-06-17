@@ -70,7 +70,7 @@ bool wifly_wait(const char *str, unsigned long ms) {
                 p = str;
             }
         }
-        util::delay(50);
+        util::blink(1, 50, 50);
     }
 
     return *p == 0 ? true : false;
@@ -79,8 +79,6 @@ bool wifly_wait(const char *str, unsigned long ms) {
 void wifly_cmd_mode(void) {
     wifly_send("$$$");
     wifly_wait("CMD", 5000);
-	wifly_send("\r");
-	wifly_wait("CMD", 5000);
 }
 
 void wifly_data_mode(void) {

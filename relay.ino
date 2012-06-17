@@ -1,8 +1,8 @@
 #include "relay.h"
 #ifndef DESKTOP
+#include <avr/sleep.h>
 #include <SoftwareSerial.h>
 #include <Time.h>
-#include <Narcoleptic.h>
 #include <Wire.h>
 #include "util.h"
 #endif
@@ -40,20 +40,22 @@ void btbee_power(unsigned char on) {
     }
 }
 
-/*
- * Narcoleptic can only take an int (max = 32767), just over
- * 30 seconds. To get our delay in minutes, double what we're
- * passed in and halve the delay.
- */
-void snooze(int minutes) {
-    for (minutes *= 2; minutes > 0; minutes--) {
-        Narcoleptic.delay(30 * 1000);
-    }
+void wake(void) {
+    util::delay(1000);
+}
+
+void mcu_sleep(void) {
+    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
+    sleep_enable();
+    attachInterrupt(0, wake, RISING);   /* attach to pin 2 */
+    sleep_mode();
+    detachInterrupt(0);
 }
 
 void setup(void) {
     pinMode(RX_WIFLY, INPUT);
     pinMode(TX_WIFLY, OUTPUT);
+    pinMode(WIFLY_WAKE, INPUT);
     pinMode(CD_BTBEE, INPUT);
 
     /*
@@ -69,6 +71,12 @@ void setup(void) {
 
     Wire.begin();
     tmp102_init();
+
+    /*
+     * We rely on the RTC in the WiFly to know when
+     * to wake us up.
+     */
+    attachInterrupt(0, wake, RISING);   /* attach to pin 2 */
 }
 
 void loop(void) {
@@ -118,17 +126,6 @@ void loop(void) {
         sleep_minutes = 10;
     }
 
-    /*
-     * We could put the wifly to sleep by checking
-     * it's pins and manipulating CTS, but let's not
-     * waste pins when we don't need to. The Wifly has
-     * it's own RTC, so runs on a different clock to the
-     * Arduino, but Narcoleptic is pretty accurate. After
-     * a bit of testing, it looks like a two minute
-     * buffer is safe enough.
-     */
-    util::blink(5, 50, 50);
-    wifly_sleep(sleep_minutes - 1);
-    snooze(sleep_minutes);
-    util::blink(5, 50, 50);
+    wifly_sleep(sleep_minutes); /* put wifly to sleep */
+    mcu_sleep();
 }

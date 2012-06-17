@@ -14,7 +14,8 @@
  */
 #define RX_BTBEE    0   /* Normal serial port */
 #define TX_BTBEE    1   /* Normal serial port */
-#define CD_BTBEE    2   /* connect to pio1 to detect connection status */
+#define WIFLY_WAKE  2   /* Wifly interrupt; wakes MCU */
+#define CD_BTBEE    3   /* connect to pio1 to detect connection status */
 #define POWER_BTBEE 5   /* turn on / off BT (Stalker v2.0) */
 #define RX_WIFLY    11  /* Stalker tx to wifly */
 #define TX_WIFLY    12  /* Stalker rx from wifly */
