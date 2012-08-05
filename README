@@ -63,10 +63,6 @@ serial libraries on read()s; adding some small delays in the serial read()
 seemed to tidy these up. Should look at the interrupts, but like I said,
 I put this together in a hurry.
 
-The WiFly wakes up independently of the Arduino. You might want to sacrifice
-a pin or two to check RTS on the WiFly to be sure it's there before you tell
-it to upload.
-
 The Bluetooth bee is put to sleep by manipulating pin 5 on the Seeeduino
 Stalker. There is a track you have to cut on the board in order to be able
 to do this; read the Stalker specs for details.

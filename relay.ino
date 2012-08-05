@@ -18,6 +18,9 @@
 
 #define MAX_RETRIES 3
 
+#define SLEEP_SHORT 10
+#define SLEEP_LONG  60
+
 unsigned long last_total_kwh;
 unsigned long last_spot_ac;
 unsigned long last_now;
@@ -112,18 +115,18 @@ void loop(void) {
         if (total_kwh == last_total_kwh &&
             spot_ac == last_spot_ac &&
             now == last_now) {
-            sleep_minutes = 60;
+            sleep_minutes = SLEEP_LONG;
         } else {
             last_total_kwh = total_kwh;
             last_spot_ac = spot_ac;
             last_now = now;
-            sleep_minutes = 10; /* pvoutput default upload is 10 minutes */
+            sleep_minutes = SLEEP_SHORT; /* pvoutput default upload is 10 minutes */
 
             wifly_init();
             wifly_upload_stats(total_kwh, spot_ac, now, tmp102_get());
         }
     } else {
-        sleep_minutes = 10;
+        sleep_minutes = SLEEP_SHORT;
     }
 
     wifly_sleep(sleep_minutes); /* put wifly to sleep */
